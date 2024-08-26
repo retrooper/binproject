@@ -59,7 +59,10 @@ void loop() {
             question = "Great!";
           }
           else {
-            question = "Noo...";
+            lcd.clear();
+            lcd.print("No...");
+            delay(2500);
+            question = "What's wrong?";
           }
           responses[0] = "Bye!";
           responses[1] = "Why ask?";
@@ -78,18 +81,32 @@ void loop() {
         }
         case 2: {
           if (sliderRight) {
-              question = "Of course I do.";
+              question = "Of course I care.";
+              lcd.clear();
+              lcd.print("I'm human..");
+              delay(1500);
+              lcd.clear();
+              lcd.print("Just like you...");
+              delay(1500);
           }
           else {
               question = terminateStatement;
           }
-          responses[0] = "That's kind.";
-          responses[1] = "Yay!";
+          responses[0] = "Interesting...";
+          responses[1] = "No you're not!";
           break;
         }
         case 3: {
-          question = "Have a nice day!";
-          responses[0] = "Thanks!";
+          if (!sliderRight) {
+            lcd.clear();
+            lcd.print("Sure I am...");
+            delay(2000);
+          }
+            lcd.clear();
+            lcd.print("Thanks for...");
+            delay(2000);
+                    question = "chatting with me!";
+          responses[0] = "Alright.";
           responses[1] = responses[0];
           break;
         }
