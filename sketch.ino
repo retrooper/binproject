@@ -1,14 +1,18 @@
 // Now turn this trash into treasure!
 #include <LiquidCrystal.h>
-
 int potmeterPin = A0;
 int potmeterVal = 0;
 
 int buttonPin = 2;
 int buttonVal = 0;
 
+boolean sliderRight = false;
 LiquidCrystal lcd(12, 11, 10, 9, 8, 7);
 
+String question = "How are you?";
+String terminateStatement = "Bye bye!";
+String responses[] = {"Good", "Bad"};
+int questionIndex = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial1.begin(115200);
@@ -18,30 +22,98 @@ void setup() {
 
    lcd.begin(16, 2);
   // you can now interact with the LCD, e.g.:
-  lcd.print("Hello World!");
+  lcd.print(question);
 }
 void loop() {
   potmeterVal = analogRead(potmeterPin);
   int buttonRes = digitalRead(buttonPin);
+  boolean sliderRes = potmeterVal > 511;
+
+  if (sliderRes != sliderRight) {
   if (potmeterVal > 511) {
     //Yes
     //Serial1.println("Yes");
+    lcd.clear();
+    lcd.print(question);
+    lcd.setCursor(2, 2);
+      lcd.print(responses[0]);
   }
   else {
     //No
     //Serial1.println("No!");
+    lcd.clear();
+    lcd.print(question);
+    lcd.setCursor(2, 2);
+    lcd.print(responses[1]);
+  }
+  sliderRight = sliderRes;
   }
   if (buttonVal != buttonRes) {
     if (buttonRes == LOW) {
       //Pressed the button
       digitalWrite(LED_BUILTIN, HIGH);
+      //Confirm slider position
+      switch (questionIndex) {
+        case 0: {
+          if (sliderRight) {
+            question = "Great!";
+          }
+          else {
+            question = "Noo...";
+          }
+          responses[0] = "Bye!";
+          responses[1] = "Why ask?";
+          break;
+        }
+        case 1: {
+          if (sliderRight) {
+            question = terminateStatement;
+          }
+          else {
+             question = "Because I care.";
+          }
+          responses[0] = "Do you really?";
+          responses[1] = "Bye...";
+          break;
+        }
+        case 2: {
+          if (sliderRight) {
+              question = "Of course I do.";
+          }
+          else {
+              question = terminateStatement;
+          }
+          responses[0] = "That's kind.";
+          responses[1] = "Yay!";
+          break;
+        }
+        case 3: {
+          question = "Have a nice day!";
+          responses[0] = "Thanks!";
+          responses[1] = responses[0];
+          break;
+        }
+        case 4: {
+          question = terminateStatement;
+          break;
+        }
+      }
       lcd.clear();
-      lcd.print("Yes!");
-    }
+      lcd.print(question);
+      questionIndex++;
+
+      if (question.equals(terminateStatement)) {
+        //Reset
+        delay(5000);
+        question = "How are you?";
+        responses[0] = "Good";
+        responses[1] = "Bad";
+        setup();
+        questionIndex = 0;
+      }
+     }
     else {
       digitalWrite(LED_BUILTIN, LOW);
-      lcd.clear();
-      lcd.print("No!");
     }
     buttonVal = buttonRes;
   }
