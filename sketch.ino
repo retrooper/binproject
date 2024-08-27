@@ -24,31 +24,38 @@ void setup() {
   // you can now interact with the LCD, e.g.:
   lcd.print(question);
 }
+
 void loop() {
-  potmeterVal = analogRead(potmeterPin);
+
+
+  int j = 4;
+  for (int i = 0; i < 8; i++) {
+     potmeterVal = analogRead(potmeterPin);
   int buttonRes = digitalRead(buttonPin);
   boolean sliderRes = potmeterVal > 511;
+    int x = i >= 4 ? (j--) : i;
+    lcd.clear();
+    lcd.setCursor(x, 0);
+    lcd.print(question);
 
-  if (sliderRes != sliderRight) {
-  if (potmeterVal > 511) {
+     if (potmeterVal > 511) {
     //Yes
     //Serial1.println("Yes");
-    lcd.clear();
-    lcd.print(question);
-    lcd.setCursor(2, 2);
+    //lcd.clear();
+    //lcd.print(question);
+    lcd.setCursor(1, 2);
       lcd.print(responses[0]);
   }
   else {
     //No
     //Serial1.println("No!");
-    lcd.clear();
-    lcd.print(question);
-    lcd.setCursor(2, 2);
+    //lcd.clear();
+    //lcd.print(question);
+    lcd.setCursor(1, 2);
     lcd.print(responses[1]);
   }
-  sliderRight = sliderRes;
-  }
-  if (buttonVal != buttonRes) {
+
+   if (buttonVal != buttonRes) {
     if (buttonRes == LOW) {
       //Pressed the button
       digitalWrite(LED_BUILTIN, HIGH);
@@ -116,7 +123,7 @@ void loop() {
         }
       }
       lcd.clear();
-      lcd.print(question);
+      //lcd.print(question);
       questionIndex++;
 
       if (question.equals(terminateStatement)) {
@@ -133,6 +140,9 @@ void loop() {
       digitalWrite(LED_BUILTIN, LOW);
     }
     buttonVal = buttonRes;
+  }
+
+    delay(1000);
   }
   delay(100);
 }
