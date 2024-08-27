@@ -1,4 +1,6 @@
-# How are you (QnA)
+# How are you (ChatBot)
+
+![image](https://github.com/user-attachments/assets/b8b7c753-235b-4d54-8d52-e88017649a7e)
 
 ### Experience this Arduino project [here](https://wokwi.com/projects/407278569002251265)
 
