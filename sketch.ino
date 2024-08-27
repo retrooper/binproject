@@ -11,7 +11,7 @@ LiquidCrystal lcd(12, 11, 10, 9, 8, 7);
 
 String question = "How are you?";
 String terminateStatement = "Bye bye!";
-String responses[] = {"Good", "Bad"};
+String responses[] = { "Good", "Bad" };
 int questionIndex = 0;
 void setup() {
   // put your setup code here, to run once:
@@ -20,74 +20,67 @@ void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
 
-   lcd.begin(16, 2);
+  lcd.begin(16, 2);
   // you can now interact with the LCD, e.g.:
   lcd.print(question);
 }
-
 void loop() {
-
-
-  int j = 4;
-  for (int i = 0; i < 8; i++) {
-     potmeterVal = analogRead(potmeterPin);
+  potmeterVal = analogRead(potmeterPin);
   int buttonRes = digitalRead(buttonPin);
   boolean sliderRes = potmeterVal > 511;
-    int x = i >= 4 ? (j--) : i;
-    lcd.clear();
-    lcd.setCursor(x, 0);
-    lcd.print(question);
 
-     if (potmeterVal > 511) {
-    //Yes
-    //Serial1.println("Yes");
-    //lcd.clear();
-    //lcd.print(question);
-    lcd.setCursor(1, 2);
+  if (sliderRes != sliderRight) {
+    if (potmeterVal > 511) {
+      //Yes
+      //Serial1.println("Yes");
+      lcd.clear();
+      lcd.print(question);
+      lcd.setCursor(2, 2);
       lcd.print(responses[0]);
+    } else {
+      //No
+      //Serial1.println("No!");
+      lcd.clear();
+      lcd.print(question);
+      lcd.setCursor(2, 2);
+      lcd.print(responses[1]);
+    }
+    sliderRight = sliderRes;
   }
-  else {
-    //No
-    //Serial1.println("No!");
-    //lcd.clear();
-    //lcd.print(question);
-    lcd.setCursor(1, 2);
-    lcd.print(responses[1]);
-  }
-
-   if (buttonVal != buttonRes) {
+  if (buttonVal != buttonRes) {
     if (buttonRes == LOW) {
       //Pressed the button
       digitalWrite(LED_BUILTIN, HIGH);
       //Confirm slider position
       switch (questionIndex) {
-        case 0: {
-          if (sliderRight) {
-            question = "Great!";
+        case 0:
+          {
+            if (sliderRight) {
+              question = "Great!";
+            } else {
+              lcd.clear();
+              lcd.print("No...");
+              delay(2500);
+              question = "What's wrong?";
+            }
+            responses[0] = "Bye!";
+            responses[1] = "Why ask?";
+            break;
           }
-          else {
-            lcd.clear();
-            lcd.print("No...");
-            delay(2500);
-            question = "What's wrong?";
+        case 1:
+          {
+            if (sliderRight) {
+              question = terminateStatement;
+            } else {
+              question = "Because I care.";
+            }
+            responses[0] = "Do you really?";
+            responses[1] = "Bye...";
+            break;
           }
-          responses[0] = "Bye!";
-          responses[1] = "Why ask?";
-          break;
-        }
-        case 1: {
-          if (sliderRight) {
-            question = terminateStatement;
-          }
-          else {
-             question = "Because I care.";
-          }
-          responses[0] = "Do you really?";
-          responses[1] = "Bye...";
-          break;
-        }
-        case 2: {
-          if (sliderRight) {
+        case 2:
+          {
+            if (sliderRight) {
               question = "Of course I care.";
               lcd.clear();
               lcd.print("I'm human..");
@@ -95,35 +88,36 @@ void loop() {
               lcd.clear();
               lcd.print("Just like you...");
               delay(1500);
-          }
-          else {
+            } else {
               question = terminateStatement;
+            }
+            responses[0] = "Interesting...";
+            responses[1] = "No you're not!";
+            break;
           }
-          responses[0] = "Interesting...";
-          responses[1] = "No you're not!";
-          break;
-        }
-        case 3: {
-          if (!sliderRight) {
-            lcd.clear();
-            lcd.print("Sure I am...");
-            delay(2000);
-          }
+        case 3:
+          {
+            if (!sliderRight) {
+              lcd.clear();
+              lcd.print("Sure I am...");
+              delay(2000);
+            }
             lcd.clear();
             lcd.print("Thanks for...");
             delay(2000);
-                    question = "chatting with me!";
-          responses[0] = "Alright.";
-          responses[1] = responses[0];
-          break;
-        }
-        case 4: {
-          question = terminateStatement;
-          break;
-        }
+            question = "chatting with me!";
+            responses[0] = "Alright.";
+            responses[1] = responses[0];
+            break;
+          }
+        case 4:
+          {
+            question = terminateStatement;
+            break;
+          }
       }
       lcd.clear();
-      //lcd.print(question);
+      lcd.print(question);
       questionIndex++;
 
       if (question.equals(terminateStatement)) {
@@ -135,14 +129,10 @@ void loop() {
         setup();
         questionIndex = 0;
       }
-     }
-    else {
+    } else {
       digitalWrite(LED_BUILTIN, LOW);
     }
     buttonVal = buttonRes;
-  }
-
-    delay(1000);
   }
   delay(100);
 }
